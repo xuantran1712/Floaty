@@ -665,9 +665,9 @@ open class Floaty: UIView {
   }
   
   fileprivate func setTintLayer() {
-    tintLayer.frame = CGRect(x: circleLayer.frame.origin.x, y: circleLayer.frame.origin.y, width: size, height: size)
+    tintLayer.frame = CGRect(x: circleLayer.frame.origin.x, y: circleLayer.frame.origin.y, width: 10, height: 10)
     tintLayer.backgroundColor = UIColor.white.withAlphaComponent(0.2).cgColor
-    tintLayer.cornerRadius = size/2
+    tintLayer.cornerRadius = 10/2
     layer.addSublayer(tintLayer)
   }
   

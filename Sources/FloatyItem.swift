@@ -22,7 +22,7 @@ open class FloatyItem: UIView {
   /**
    This object's button size.
    */
-  @objc open var size: CGFloat = 42 {
+  @objc open var size: CGFloat = 22 {
     didSet {
       self.frame = CGRect(x: 0, y: 0, width: size, height: size)
       titleLabel.frame.origin.y = self.frame.height/2-titleLabel.frame.size.height/2
@@ -39,7 +39,7 @@ open class FloatyItem: UIView {
   /**
    Title label color.
    */
-  @objc open var titleColor: UIColor = UIColor.white {
+  @objc open var titleColor: UIColor = UIColor.black {
     didSet {
       titleLabel.textColor = titleColor
     }
@@ -66,9 +66,9 @@ open class FloatyItem: UIView {
   @objc open var handler: ((FloatyItem) -> Void)? = nil
   
   @objc open var imageOffset: CGPoint = CGPoint.zero
-  @objc open var imageSize: CGSize = CGSize(width: 25, height: 25) {
+  @objc open var imageSize: CGSize = CGSize(width: 12, height: 12) {
     didSet {
-      _iconImageView?.frame = CGRect(x: 0, y: 0, width: imageSize.width, height: imageSize.height)
+      _iconImageView?.frame = CGRect(x: 0, y: 0, width: imageSize.width + 10, height: imageSize.height + 10)
       _iconImageView?.center = CGPoint(x: size/2, y: size/2) + imageOffset
     }
   }
@@ -113,6 +113,11 @@ open class FloatyItem: UIView {
         _titleLabel?.textColor = titleColor
         _titleLabel?.font = FloatyManager.defaultInstance().font
         addSubview(_titleLabel!)
+        if _frameImageView == nil {
+            _frameImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 100, height: 30))
+            _frameImageView?.image = UIImage(named: "frame")
+            addSubview(_frameImageView!)
+        }
       }
       return _titleLabel!
     }
@@ -123,25 +128,39 @@ open class FloatyItem: UIView {
    */
   @objc open var title: String? = nil {
     didSet {
-      titleLabel.text = title
-      titleLabel.sizeToFit()
-      if(titleLabelPosition == .left) {
-        titleLabel.frame.origin.x = -titleLabel.frame.size.width - 10
-      } else { //titleLabel will be on right
-        titleLabel.frame.origin.x = iconImageView.frame.origin.x + iconImageView.frame.size.width + 20
-      }
-      
-      titleLabel.frame.origin.y = self.size/2-titleLabel.frame.size.height/2
-      
-      if FloatyManager.defaultInstance().rtlMode {
-        titleLabel.transform = CGAffineTransform(scaleX: -1.0, y: 1.0);
-      }else {
-        titleLabel.transform = CGAffineTransform(scaleX: 1.0, y: 1.0);
-      }
-      
+          titleLabel.text = title
+          titleLabel.sizeToFit()
+          if(titleLabelPosition == .left) {
+            titleLabel.frame.origin.x = -titleLabel.frame.size.width - 20
+          } else { //titleLabel will be on right
+            titleLabel.frame.origin.x = iconImageView.frame.origin.x + iconImageView.frame.size.width
+          }
+        
+          titleLabel.frame.origin.y = self.size/2-titleLabel.frame.size.height/2
+        
+          if FloatyManager.defaultInstance().rtlMode {
+            titleLabel.transform = CGAffineTransform(scaleX: -1.0, y: 1.0);
+          }else {
+            titleLabel.transform = CGAffineTransform(scaleX: 1.0, y: 1.0);
+          }
+         let frm = titleLabel.frame
+         if let frmView = _frameImageView {
+            frmView.frame = CGRect(x: frm.origin.x - 10, y: frm.origin.y - 7, width: frm.size.width + 20, height: frm.size.height + 10)
+         }
     }
   }
   
+    var _frameImageView: UIImageView? = nil
+    @objc open var frameImageView: UIImageView {
+        get {
+            if _frameImageView == nil {
+                _frameImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+                _frameImageView?.image = UIImage(named: "frame.png")
+                addSubview(_frameImageView!)
+            }
+            return _frameImageView!
+        }
+    }
   /**
    Item's icon image view.
    */
@@ -149,7 +168,7 @@ open class FloatyItem: UIView {
   @objc open var iconImageView: UIImageView {
     get {
       if _iconImageView == nil {
-        _iconImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: imageSize.width, height: imageSize.height))
+        _iconImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: imageSize.width*1.25, height: imageSize.height*1.25))
         _iconImageView?.center = CGPoint(x: size/2, y: size/2) + imageOffset
         _iconImageView?.contentMode = UIView.ContentMode.scaleAspectFill
         addSubview(_iconImageView!)
